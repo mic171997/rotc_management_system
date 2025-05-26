@@ -37,7 +37,7 @@
 					                        </div>
                                             <div class="col-sm-1">
                                                 <div class="form-group" style="margin-top: 23px;">
-                                                    <button class="btn btn-success" @click="addcadet()" type="submit">Submit</button>
+                                                    <button :class="!id ? 'btn btn-success': 'btn btn-primary'" @click="addcadet()">{{!id ? 'Add Cadets' : 'Update Cadets' }}</button>
 					                            </div>
 					                        </div>
 					                    </div>
@@ -92,7 +92,7 @@
                 <td>{{ trans.company }}</td>
                 <td>{{ trans.cadetno }}</td>
                 <td style="text-align: center;"><button class="btn btn-sm  btn-danger" @click="deletecadets(trans.id)" >Delete</button>
-                    <button class="btn btn-sm  btn-primary" >Update</button>
+                    <button class="btn btn-sm  btn-primary"@click="updatecadets(trans)" >Update</button>
                 </td>
               </tr>
             </tbody>
@@ -157,6 +157,7 @@ Vue.component("pagination", require("laravel-vue-pagination"));
         firstname:'',
         lastname:'',
         company:'',
+        id:'',
         search: "",
         loading: false,
       }
@@ -187,7 +188,7 @@ Vue.component("pagination", require("laravel-vue-pagination"));
 
     addcadet() {
         Swal.fire({
-        title: "Are you sure to Add this Cadet?",
+        title: !this.id ? "Are you sure to Add this Cadet?"  : "Are you sure to Update this Cadet?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -196,11 +197,11 @@ Vue.component("pagination", require("laravel-vue-pagination"));
         allowOutsideClick: false,
       }).then((result) => {
         if (result.isConfirmed) {
-          axios.post(`/cadets/add_cadets?firstname=${this.firstname}&lastname=${this.lastname}&company=${this.company}&cadetno=${this.cadetno}`).then((response) => {
+          axios.post(`/cadets/add_cadets?firstname=${this.firstname}&lastname=${this.lastname}&company=${this.company}&cadetno=${this.cadetno}&id=${this.id}`).then((response) => {
             if (response.data.message == "Success") {
               Swal.fire({
                 title: "Success!",
-                text: "Successfully Added!",
+                text: !this.id ? "Successfully Added!" : "Successfully Updated!" ,
                 icon: "success",
                 allowOutsideClick: false,
               });
@@ -257,6 +258,7 @@ Vue.component("pagination", require("laravel-vue-pagination"));
         this.firstname = '';
         this.lastname = '';
         this.company = '';
+        this.id = '';
         this.getCadetCounts();
     },
 
@@ -272,6 +274,15 @@ Vue.component("pagination", require("laravel-vue-pagination"));
           this.loading = false;
         });
     }, 350),
+    updatecadets(trans){
+
+      this.firstname = trans.name;
+      this.lastname = trans.lastname;
+      this.company = trans.company;
+      this.cadetno = trans.cadetno;
+      this.id = trans.id;
+    }
+
     },
     mounted() {
         this.getCadetCounts();

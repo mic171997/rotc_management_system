@@ -27,9 +27,12 @@ class CadetController extends Controller
        $lastname = request()->lastname;
        $company = request()->company;
        $cadetno = request()->cadetno;
+       $id = request()->id;
 
 
-       DB::table('users')
+
+if ($id == null) {
+DB::table('users')
        ->insert([
         'name' => $firstname,
         'lastname' => $lastname,
@@ -43,6 +46,25 @@ class CadetController extends Controller
        ]);
 
        return response()->json(['message' => 'Success'], 200);
+}else {
+DB::table('users')
+->where('id' ,$id)
+       ->update([
+        'name' => $firstname,
+        'lastname' => $lastname,
+        'company' => $company,
+        'cadetno' => $cadetno ,
+        'username' => $firstname,
+        'password' => Hash::make($cadetno),
+        'type' => 'Cadet',
+        'created_at' => now(),
+        'updated_at' => now()
+       ]);
+
+       return response()->json(['message' => 'Success'], 200);
+}
+
+       
     }
 
     public function get_cadets() {
