@@ -1,0 +1,468 @@
+<!-- @format -->
+<template>
+  <div id="page-body">
+    <div id="page-content">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="row mar-top">
+            <div class="col-md-12">
+              <h3 class="panel-heading text-thin" style="font-size: 20px">
+                INVENTORY COUNT CONSOLIDATION SYSTEM
+              </h3>
+              <h3 class="text-main text-normal text-2x mar-no">
+                Welcome {{ user.name }}!
+              </h3>
+              <h5 class="text-uppercase text-muted text-normal">
+                {{ date | DashboardTime }}
+              </h5>
+              <hr class="new-section-xs" />
+              <div class="row mar-top">
+                <div class="col-sm-4" v-if="user.usertype_id == 1">
+                  <div class="text-lg">
+                    <h4 style="font-size: 18px; font-weight: 600" class="mar-btm">
+                      &nbsp; Setup
+                    </h4>
+                    <div class="list-group bg-trans mar-no">
+                      <router-link to="/location">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i>
+                          &nbsp; Location Setup (App users)
+                        </a>
+                      </router-link>
+                      <router-link to="/users">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i> &nbsp; User
+                          setup
+                        </a>
+                      </router-link>
+                      <router-link to="/vendor_masterfile">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i> &nbsp;
+                          Vendor Masterfile</a>
+                      </router-link>
+                      <router-link to="/category">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i> &nbsp; Item
+                          Department</a>
+                      </router-link>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="text-lg">
+                    <h4 style="font-size: 18px; font-weight: 600" class="mar-btm">
+                      Reports
+                    </h4>
+                    <div class="list-group bg-trans mar-no">
+                      <router-link to="/physical_count">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i>
+                          &nbsp; Actual Count (APP)
+                        </a>
+                      </router-link>
+                      <router-link to="/advance_count">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i>
+                          &nbsp; Advance Count (APP)
+                        </a>
+                      </router-link>
+                    <!-- <router-link to="/inventory_valuation">
+                        <a
+                          href="javascript:;"
+                          class="list-group-item panel-title"
+                          ><i class="pci-chevron chevron-right"></i> Inventory
+                          Valuation per Actual Count
+                        </a>
+                                  </router-link> -->
+                      <router-link to="/consolidate_adv_actual_count">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i>
+                          &nbsp; Consolidate Advance and Actual Count
+                        </a>
+                      </router-link>
+                      <router-link to="/variance_report">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i>&nbsp;
+                          Consolidated Variance &nbsp; Report</a>
+                      </router-link>
+                    <!-- <router-link to="/variance_report_cost">
+                        <a
+                          href="javascript:;"
+                          class="list-group-item panel-title"
+                          ><i class="pci-chevron chevron-right"></i>Consolidated
+                          Variance &nbsp; Report w/ Cost</a
+                        >
+                                  </router-link> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4" v-if="user.usertype_id == 1">
+                  <div class="text-lg">
+                    <h4 style="font-size: 18px; font-weight: 600" class="mar-btm">
+                      &nbsp;
+                      Back-End Adjusment
+                    </h4>
+                    <div class="list-group bg-trans mar-no">
+
+                      <router-link to="/backendadjustment">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i>
+                          &nbsp; Back-End Adjustment
+                        </a>
+                      </router-link>
+                      
+                      <router-link to="/checkduplicateditems">
+                        <a href="javascript:;" class="list-group-item panel-title"><i
+                            class="pci-chevron chevron-right"></i>
+                          &nbsp; Check Duplicated Items
+                        </a>
+                      </router-link>
+
+                    <!-- <router-link to="/consolidate_adv_actual_count">
+                        <a
+                          href="javascript:;"
+                          class="list-group-item panel-title"
+                          ><i class="pci-chevron chevron-right"></i>
+                          &nbsp; Consolidate Advance and Actual Count
+                        </a>
+                                  </router-link> -->
+                    <!-- <router-link to="/inventory_balance">
+                        <a
+                          href="javascript:;"
+                          class="list-group-item panel-title"
+                          ><i class="pci-chevron chevron-right"></i>
+                          &nbsp; Inventory Balance per Navision
+                        </a>
+                                  </router-link> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <!-- <div class="col-md-7">
+              <div
+                id="demo-bar-chart"
+                style="height: 250px; padding: 0px; position: relative;"
+              >
+                <canvas
+                  class="flot-base"
+                  width="699"
+                  height="250"
+                  style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 699.828px; height: 250px;"
+                ></canvas>
+                <div
+                  class="flot-text"
+                  style="position: absolute; inset: 0px; font-size: smaller; color: rgb(84, 84, 84);"
+                >
+                  <div
+                    class="flot-x-axis flot-x1-axis xAxis x1Axis"
+                    style="position: absolute; inset: 0px;"
+                  >
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; max-width: 55px; top: 234px; left: 73px; text-align: center;"
+                    >
+                      0
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; max-width: 55px; top: 234px; left: 157px; text-align: center;"
+                    >
+                      1
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; max-width: 55px; top: 234px; left: 241px; text-align: center;"
+                    >
+                      2
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; max-width: 55px; top: 234px; left: 326px; text-align: center;"
+                    >
+                      3
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; max-width: 55px; top: 234px; left: 410px; text-align: center;"
+                    >
+                      4
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; max-width: 55px; top: 234px; left: 495px; text-align: center;"
+                    >
+                      5
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; max-width: 55px; top: 234px; left: 579px; text-align: center;"
+                    >
+                      6
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; max-width: 55px; top: 234px; left: 664px; text-align: center;"
+                    >
+                      7
+                    </div>
+                  </div>
+                  <div
+                    class="flot-y-axis flot-y1-axis yAxis y1Axis"
+                    style="position: absolute; inset: 0px;"
+                  >
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; top: 221px; left: 18px; text-align: right;"
+                    >
+                      0
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; top: 177px; left: 6px; text-align: right;"
+                    >
+                      200
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; top: 133px; left: 6px; text-align: right;"
+                    >
+                      400
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; top: 88px; left: 6px; text-align: right;"
+                    >
+                      600
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; top: 44px; left: 6px; text-align: right;"
+                    >
+                      800
+                    </div>
+                    <div
+                      class="flot-tick-label tickLabel"
+                      style="position: absolute; top: 0px; left: 0px; text-align: right;"
+                    >
+                      1000
+                    </div>
+                  </div>
+                </div>
+                <canvas
+                  class="flot-overlay"
+                  width="699"
+                  height="250"
+                  style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 699.828px; height: 250px;"
+                ></canvas>
+                <div class="legend">
+                  <div
+                    style="position: absolute; width: 57px; height: 51px; top: 13px; right: 13px; background-color: rgb(255, 255, 255); opacity: 0.85;"
+                  ></div>
+                  <table
+                    style="position:absolute;top:13px;right:13px;;font-size:smaller;color:#545454"
+                  >
+                    <tbody>
+                      <tr>
+                        <td class="legendColorBox">
+                          <div style="border:1px solid #ccc;padding:1px">
+                            <div
+                              style="width:4px;height:0;border:5px solid rgb(3,169,244);overflow:hidden"
+                            ></div>
+                          </div>
+                        </td>
+                        <td class="legendLabel">Students</td>
+                      </tr>
+                      <tr>
+                        <td class="legendColorBox">
+                          <div style="border:1px solid #ccc;padding:1px">
+                            <div
+                              style="width:4px;height:0;border:5px solid rgb(255,179,0);overflow:hidden"
+                            ></div>
+                          </div>
+                        </td>
+                        <td class="legendLabel">Parents</td>
+                      </tr>
+                      <tr>
+                        <td class="legendColorBox">
+                          <div style="border:1px solid #ccc;padding:1px">
+                            <div
+                              style="width:4px;height:0;border:5px solid rgb(227,232,238);overflow:hidden"
+                            ></div>
+                          </div>
+                        </td>
+                        <td class="legendLabel">Teachers</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <hr class="new-section-xs bord-no" />
+              <ul class="list-inline text-center">
+                <li><span class="label label-info">354</span> Students</li>
+                <li><span class="label label-warning">74</span> Parents</li>
+                <li><span class="label label-default">25</span> Teachers</li>
+              </ul>
+                        </div> -->
+          </div>
+        </div>
+      </div>
+      <RackMonitoring style="margin: -20px !important"></RackMonitoring>
+    <!-- <div class="row">
+        <div class="col-lg-3">
+          <div class="row">
+            <div class="col-sm-3 col-lg-6">
+            
+            </div>
+            <div class="col-sm-3 col-lg-6">
+             
+            </div>
+            <div class="col-sm-6 col-lg-12">
+              <div class="panel">
+                <div class="panel-body text-center">
+                  <img
+                    alt="Profile Picture"
+                    src="img/profile-photos/5.png"
+                    class="img-lg img-circle mar-btm"
+                    style="margin-left: 30%"
+                  />
+                  <p
+                    class="text-semibold mar-no text-main"
+                    style="font-size: 1.2em;"
+                  >
+                    {{ user.name }}
+                  </p>
+                  <p class="text-muted">{{ user.position }}</p>
+                  <div class="mar-top">
+                    <button class="btn btn-mint">Follow</button>
+                    <button class="btn btn-mint">Message</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-9 no-pad">
+          <div class="panel panel-body">
+            <div class="panel-heading mar-btm">
+              <h3
+                class="pad-btm bord-btm text-thin"
+                style="font-size: 20px;/* padding: 15px 0px 0px 25px; */"
+              >
+                <i class="demo-pli-male icon-lg"></i>
+                Web Users
+              </h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-vcenter mar-top">
+                <thead>
+                  <tr>
+                    <th class="min-w-td">Name</th>
+                    <th>Company</th>
+                    <th>Business Unit</th>
+                    <th>Department</th>
+                    <th>Section</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="!data.data.length">
+                    <td colspan="6" style="text-align: center;">
+                      No data available.
+                    </td>
+                  </tr>
+                  <tr v-for="(data, index) in data.data" :key="index">
+                    <td>
+                      <img
+                        src="img/profile-photos/1.png"
+                        alt="Profile Picture"
+                        class="img-circle img-sm"
+                      />
+                    </td>
+                    <td>
+                      <a href="javascript:;" class="btn-link">{{
+                        data.name
+                      }}</a>
+                    </td>
+                    <td>{{ data.company }}</td>
+                    <td>
+                      {{ data.business_unit }}
+                    </td>
+                    <td>
+                      {{ data.section }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="col-md-6">
+                    Showing {{ data.from }} to <strong>{{ data.to }}</strong> of
+                    <strong> {{ data.total }} entries </strong>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="text-right">
+                      <pagination
+                        style="margin: 0 0 20px 0"
+                        :limit="1"
+                        :show-disabled="true"
+                        :data="data"
+                        @pagination-change-page="getResults"
+                      ></pagination>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+                  </div> -->
+    </div>
+  </div>
+</template>
+
+<script>
+import Users from './Users.vue'
+import RackMonitoring from './RackMonitoring.vue'
+export default {
+  data() {
+    return {
+      data: {
+        data: [],
+        current_page: null,
+        to: null,
+        from: null,
+        total: null,
+        per_page: null
+      },
+      date: this.getFormattedDateToday(),
+      total_result: 0,
+      user: []
+    }
+  },
+  components: {
+    Users,
+    RackMonitoring
+  },
+  methods: {
+    // getResults(page = 1) {
+    //   let url = `/setup/users/getResults/?page=`
+
+    //   axios.get(url + page).then(({ data }) => {
+    //     this.data = data
+    //     this.total_result = data.total
+    //   })
+    // },
+    getFormattedDateToday() {
+      return new Date().toJSON().slice(0, 10).replace(/-/g, '-')
+    }
+  },
+  mounted() {
+    this.$root.currentPage = this.$route.meta.name
+    this.user = this.$root.authUser
+    console.log(this.user)
+    // this.getResults()
+  }
+}
+</script>
+
+<style lang="scss" scoped></style>
