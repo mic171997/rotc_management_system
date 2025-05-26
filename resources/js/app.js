@@ -10,6 +10,7 @@ import router from './router'
 import Breadcrumb from './components/Breadcrumb'
 import Swal from 'sweetalert2'
 import Modal from './components/modals/ChangePassword.vue'
+import 'bootstrap';
 
 const authUser = JSON.parse(
   document.head.querySelector('meta[name="auth-user"]').content
