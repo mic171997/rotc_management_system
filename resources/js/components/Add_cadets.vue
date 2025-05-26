@@ -7,7 +7,7 @@
             <div class="row mar-top">
               <div class="col-md-12">
                 <h3 class="panel-heading text-thin" style="font-size: 20px">
-                  Add Cadets
+                  Add Cadet
                 </h3>
                 <hr class="new-section-xs" />
                 <div class="row">
