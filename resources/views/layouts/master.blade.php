@@ -244,8 +244,12 @@
                         </a></router-link>
 
                         <router-link tag="li" class="nav-item" to="cadets"><a href="#">
-                          <i class="fa fa-plus"></i>
+                          <i class="fa fa-plus-square"></i>
                           <span class="menu-title">Add Cadet</span>
+                        </a></router-link>
+                         <router-link tag="li" class="nav-item" to="schedules"><a href="#">
+                          <i class="fa fa-bars"></i>
+                          <span class="menu-title">Add Schedules</span>
                         </a></router-link>
                     </ul>
                     </li>

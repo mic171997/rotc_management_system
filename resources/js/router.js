@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 
 import Dashboard from './components/Dashboard.vue'
 import Cadets from './components/Add_cadets.vue'
+import Schedules from './components/Add_schedules.vue'
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,14 @@ const router = new VueRouter({
       component: Cadets,
       meta: {
         name: 'Add Cadets'
+      }
+    },
+    {
+      name: 'Add Schedules',
+      path: '/schedules',
+      component: Schedules,
+      meta: {
+        name: 'Add Schedules'
       }
     },
 
