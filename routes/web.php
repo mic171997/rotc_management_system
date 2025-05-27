@@ -40,6 +40,9 @@ Route::middleware('auth')->group(function () {
             Route::post('/approved_request', [CadetController::class, 'approved_request']);
             Route::post('/add_attendance', [CadetController::class, 'add_attendance']);
             Route::get('/get_events_attendance', [CadetController::class, 'get_events_attendance']);
+            Route::get('/get_count_cadets', [CadetController::class, 'get_count_cadets']);
+            Route::get('/get_count_schedules', [CadetController::class, 'get_count_schedules']);
+            Route::get('/get_count_request', [CadetController::class, 'get_count_request']);
     });
 
 });

@@ -32,11 +32,11 @@ const router = new VueRouter({
             },
         },
         {
-            name: "Add Schedules",
+            name: "Schedules",
             path: "/schedules",
             component: Schedules,
             meta: {
-                name: "Add Schedules",
+                name: "Schedules",
             },
         },
         {

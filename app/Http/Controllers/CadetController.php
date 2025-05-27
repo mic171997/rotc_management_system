@@ -367,4 +367,36 @@ DB::table('users')
         return $result;
     }
 
+    public function get_count_cadets() {
+
+        $count = DB::table('users')
+        ->where('type' , 'Cadet')
+        ->count();
+
+        return $count;
+    }
+
+    public function get_count_schedules() {
+
+          $count = DB::table('schedules')
+        ->count();
+
+        return $count;
+    }
+
+    public function get_count_request() {
+
+        $cadetno = auth()->user()->cadetno;
+
+         $count = DB::table('file_absents')
+          ->when($cadetno !== "Admin", function ($q) use ($cadetno) {
+                $q->where(function ($q) use ($cadetno) {
+                    $q->orWhere('file_absents.cadetno', $cadetno);
+                });
+            })
+        ->count();
+
+        return $count;
+    }
+
 }

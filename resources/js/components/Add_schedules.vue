@@ -9,7 +9,7 @@
                                 class="panel-heading text-thin"
                                 style="font-size: 20px"
                             >
-                                Add Schedules
+                                Schedules
                             </h3>
                             <hr class="new-section-xs" />
 
@@ -170,6 +170,11 @@
                                                 {{ trans.time_to }}
                                             </td>
                                             <td style="text-align: center">
+                                                <button
+                                                    class="btn btn-sm btn-info"
+                                                >
+                                                    Show Attendance
+                                                </button>
                                                 <button
                                                     class="btn btn-sm btn-danger"
                                                     @click="
@@ -352,7 +357,6 @@ export default {
                 .get(`/cadets/get_events?search=${this.search}&page=` + page)
                 .then((res) => {
                     this.events = res.data;
-                    this.loading = false;
                 });
         }, 350),
         updatesched(trans) {

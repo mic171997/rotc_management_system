@@ -255,7 +255,7 @@
                         </a></router-link>
                          <router-link tag="li" class="nav-item" to="schedules"><a href="#">
                           <i class="fa fa-bars"></i>
-                          <span class="menu-title">Add Schedules</span>
+                          <span class="menu-title">Schedules</span>
                         </a></router-link>
                         <router-link tag="li" class="nav-item" to="file_absents"><a href="#">
                           <i class="fa fa-pencil-square-o"></i>
