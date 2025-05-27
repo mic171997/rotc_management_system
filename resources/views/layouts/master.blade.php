@@ -250,7 +250,7 @@
                         </a></router-link>
 
                         <router-link tag="li" class="nav-item" to="cadets"><a href="#">
-                          <i class="fa fa-plus-square"></i>
+                          <i class="fa fa-group"></i>
                           <span class="menu-title">Add Cadet</span>
                         </a></router-link>
                          <router-link tag="li" class="nav-item" to="schedules"><a href="#">
@@ -264,6 +264,10 @@
                           <router-link tag="li" class="nav-item" to="absents_request"><a href="#">
                           <i class="fa fa-envelope-o"></i>
                           <span class="menu-title">Absent Request</span>
+                        </a></router-link>
+                         <router-link tag="li" class="nav-item" to="attendance"><a href="#">
+                          <i class="fa fa-id-badge"></i>
+                          <span class="menu-title">Attendance</span>
                         </a></router-link>
                          {{-- <li class="nav-item">
                         <a href="{{ route('logout') }}" onclick="event.preventDefault();
