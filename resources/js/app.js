@@ -8,9 +8,20 @@ var dayjs = require('dayjs')
 import Vue from 'vue'
 import router from './router'
 import Breadcrumb from './components/Breadcrumb'
+import Spinner from './components/global/Spinner'
 import Swal from 'sweetalert2'
 import Modal from './components/modals/ChangePassword.vue'
 import 'bootstrap';
+
+const originalPopover = $.fn.popover;
+
+$.fn.popover = function (config, ...args) {
+    if (config === 'destroy') {
+        config = 'dispose';
+    }
+    return originalPopover.call(this, config, ...args);
+};
+
 
 const authUser = JSON.parse(
   document.head.querySelector('meta[name="auth-user"]').content
@@ -41,6 +52,7 @@ window.Toast = Toast
 window.Swal = Swal
 window.authUser = authUser
 Vue.component('breadcrumb', Breadcrumb)
+Vue.component('spinner', Spinner)
 const app = new Vue({
   el: '#app',
   router,

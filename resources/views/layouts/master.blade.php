@@ -125,19 +125,22 @@
 
                 <!--User dropdown-->
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                <li id="dropdown-user" class="dropdown">
+                <li>
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                      document.getElementById('logout-form').submit();">
+                          {{ __('Logout') }}</a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                          @csrf
+                        </form>
+                      </li>
+                {{-- <li id="dropdown-user" class="dropdown">
                   <a href="#" data-toggle="dropdown" class="dropdown-toggle text-right">
                     <span class="ic-user pull-right">
-                      <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                      <!--You can use an image instead of an icon.-->
-                      <!--<img class="img-circle img-user media-object" src="img/profile-photos/1.png" alt="Profile Picture">-->
-                      <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                     
                       <i class="demo-pli-male"></i>
                     </span>
-                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                    <!--You can also display a user name in the navbar.-->
-                    <!--<div class="username hidden-xs">Aaron Chavez</div>-->
-                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                 
                   </a>
 
 
@@ -159,7 +162,7 @@
                       </li>
                     </ul>
                   </div>
-                </li>
+                </li> --}}
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <!--End user dropdown-->
 
@@ -184,10 +187,13 @@
           <!--CONTENT CONTAINER-->
           <!--===================================================-->
           <div id="content-container">
+           {{-- <span style="margin-left: 10px"> <breadcrumb></breadcrumb> </span> --}}
+           <div style="padding-left: 40px">
             <breadcrumb></breadcrumb>
-            <keep-alive>
+          </div>
+            {{-- <keep-alive> --}}
               <router-view></router-view>
-            </keep-alive>
+            {{-- </keep-alive> --}}
           </div>
           <!--===================================================-->
           <!--END CONTENT CONTAINER-->
@@ -207,7 +213,7 @@
 
                     <!--Profile Widget-->
                     <!--================================-->
-                    <div id="mainnav-profile" class="mainnav-profile">
+                    {{-- <div id="mainnav-profile" class="mainnav-profile">
                       <div class="profile-wrap text-center">
                         <div class="pad-btm">
                           <img class="img-circle img-md" src="img/profile-photos/1.png" alt="Profile Picture"
@@ -231,10 +237,10 @@
                           <i class="demo-pli-unlock icon-lg icon-fw"></i> Logout
                         </a>
                       </div>
-                    </div>
+                    </div> --}}
 
                     <ul id="mainnav-menu" class="list-group">
-
+                        <br>
                       <!--Category name-->
                       <li class="list-header">Navigation</li>
 
@@ -251,6 +257,23 @@
                           <i class="fa fa-bars"></i>
                           <span class="menu-title">Add Schedules</span>
                         </a></router-link>
+                        <router-link tag="li" class="nav-item" to="file_absents"><a href="#">
+                          <i class="fa fa-pencil-square-o"></i>
+                          <span class="menu-title">File Absent</span>
+                        </a></router-link>
+                          <router-link tag="li" class="nav-item" to="absents_request"><a href="#">
+                          <i class="fa fa-envelope-o"></i>
+                          <span class="menu-title">Absent Request</span>
+                        </a></router-link>
+                         {{-- <li class="nav-item">
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                      document.getElementById('logout-form').submit();">
+                          <i class="demo-pli-unlock icon-lg icon-fw"></i> {{ __('Logout') }}</a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                          @csrf
+                        </form>
+                      </li> --}}
                     </ul>
                     </li>
                   </div>

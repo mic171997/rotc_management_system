@@ -97,4 +97,162 @@ DB::table('users')
         return response()->json(['message' => 'Success'], 200);
     }
 
+    public function add_schedules() {
+
+       $id = request()->id;
+       $date = request()->date;
+       $time_from = request()->time_from;
+       $time_to = request()->time_to;
+       $events = request()->events;
+
+       if ($id == null) {
+        DB::table('schedules')
+        ->insert([
+         'events' => $events,
+         'date' => $date,
+         'time_from' => $time_from,
+         'time_to' => $time_to,
+         'created_at' => now(),
+         'updated_at' => now()
+        ]);
+ 
+        return response()->json(['message' => 'Success'], 200);
+       } 
+       else {
+        DB::table('schedules')
+        ->where('id' , $id)
+        ->update([
+         'events' => $events,
+         'date' => $date,
+         'time_from' => $time_from,
+         'time_to' => $time_to,
+         'created_at' => now(),
+         'updated_at' => now()
+        ]);
+ 
+        return response()->json(['message' => 'Success'], 200);
+       }
+    }
+
+    public function get_events() {
+
+        $search = request()->search;
+        $result = DB::table('schedules')
+            ->selectRaw('schedules.*')
+            ->when($search !== "null", function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->orWhere('schedules.events', 'LIKE', "%$search%");
+                });
+            })
+            ->paginate(10);
+
+        return $result;
+    }
+
+    
+    public function  delete_schedules() {
+
+        $id = request()->id;
+
+        DB::table('schedules')
+        ->where('id' , $id )
+        ->delete();
+
+        return response()->json(['message' => 'Success'], 200);
+    }
+
+    public function add_absent_request() {
+
+        $cadetno = request()->cadetno;
+        $name = request()->name;
+        $company = request()->company;
+        $events = request()->events;
+        $date = request()->date;
+        $time = request()->time;
+        $reason = request()->reason;
+        $id = request()->id;
+
+        $check = DB::table('file_absents')
+        ->where('id',$id)
+        ->where('cadetno',$cadetno)
+        ->exists();
+
+        if ($check == false) {
+  DB::table('file_absents')
+        ->insert([
+         'cadetno' => $cadetno,
+         'name' =>  $name,
+         'company' =>  $company,
+         'events' =>  $events,
+         'date' =>  $date,
+         'time' =>  $time,
+         'reason' =>  $reason,
+         'created_at' => now(),
+         'updated_at' => now(),
+         'status' => 0,
+         'training_id' => $id
+        ]);
+ 
+        return response()->json(['message' => 'Success'], 200);
+        }
+        else {
+            return response()->json(['message' => 'Exists'], 200);
+        }
+      
+
+      
+    }
+
+    public function get_request() {
+
+        $type = auth()->user()->type;
+        $cadetno = auth()->user()->cadetno;
+        $search = request()->search;
+        $status = request()->status;
+
+         $search = request()->search;
+        $result = DB::table('file_absents')
+            ->selectRaw('file_absents.*')
+            ->when($search !== null && $search !== "null" , function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->orWhere('file_absents.events', 'LIKE', "%$search%")
+                    ->orWhere('file_absents.name', 'LIKE', "%$search%")
+                    ->orWhere('file_absents.cadetno', 'LIKE', "%$search%");
+                });
+            })
+             ->when($status !== null && $status !== "null", function ($q) use ($status) {
+                $q->where(function ($q) use ($status) {
+                    $q->Where('file_absents.status', $status == 'Pending' ? 0 : 1 );
+                   
+                });
+            })
+             ->when($type !== 'Admin', function ($q) use ($cadetno) {
+                $q->where(function ($q) use ($cadetno) {
+                    $q->Where('file_absents.cadetno', $cadetno);
+                   
+                });
+            })
+            ->paginate(10);
+
+        return $result;
+
+
+    }
+
+    public function approved_request() {
+
+        $id = request()->id;
+
+        DB::table('file_absents')
+        ->where('id' , $id)
+        ->update([
+            'status' => 1,
+            'date_approved' => now(),
+            'approved_by' => auth()->user()->name . ' ' . auth()->user()->lastname
+        ]);
+
+         return response()->json(['message' => 'Success'], 200);
+
+    }
+
 }

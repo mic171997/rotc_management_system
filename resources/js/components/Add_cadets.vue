@@ -129,7 +129,7 @@
   </template>
   
   <script>
-import { clippingParents } from '@popperjs/core';
+// import { clippingParents } from '@popperjs/core';
 import Swal from "sweetalert2";
 import Vue from "vue";
 import _ from "lodash";
@@ -289,7 +289,6 @@ Vue.component("pagination", require("laravel-vue-pagination"));
         this.getcadet();
       this.$root.currentPage = this.$route.meta.name
       this.user = this.$root.authUser
-      console.log(this.user)
     }
   }
   </script>
