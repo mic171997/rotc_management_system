@@ -110,8 +110,8 @@ DB::table('users')
         ->insert([
          'events' => $events,
          'date' => $date,
-         'time_from' => $time_from,
-         'time_to' => $time_to,
+         'time_from' => $time_from . ":00",
+         'time_to' => $time_to . ":00",
          'created_at' => now(),
          'updated_at' => now()
         ]);
@@ -124,8 +124,8 @@ DB::table('users')
         ->update([
          'events' => $events,
          'date' => $date,
-         'time_from' => $time_from,
-         'time_to' => $time_to,
+         'time_from' => $time_from . ":00",
+         'time_to' => $time_to . ":00",
          'created_at' => now(),
          'updated_at' => now()
         ]);
@@ -253,6 +253,118 @@ DB::table('users')
 
          return response()->json(['message' => 'Success'], 200);
 
+    }
+
+    public function add_attendance() {
+
+       $attendance = request()->attendance;
+       $id = request()->id;
+       $cadetno = auth()->user()->cadetno;
+
+       $check = DB::table('attendances')
+       ->where('training_id' , $id)
+       ->where('cadetno' , $cadetno)
+       ->exists();
+
+
+       if ($check == false) {
+
+        if ($attendance === 'Time In') {
+
+         DB::table('attendances')
+         ->insert([
+         'cadetno' => $cadetno,
+         'training_id' =>  $id,
+         'time_in' =>  now(),
+         'created_at' =>  now(),
+         'updated_at' =>  now(),
+        ]);
+
+        }
+        else {
+
+        DB::table('attendances')
+         ->insert([
+         'cadetno' => $cadetno,
+         'training_id' =>  $id,
+         'time_out' =>  now(),
+          'created_at' =>  now(),
+         'updated_at' =>  now(),
+        ]);
+
+        }
+
+        return response()->json(['message' => 'Success'], 200);
+
+       }
+
+       else {
+
+        if ($attendance === 'Time In') {
+
+          $checklog =  DB::table('attendances')
+                 ->where('training_id' , $id)
+                 ->where('cadetno' , $cadetno)
+                 ->whereNull('attendances.time_in')
+                 ->exists();
+
+                 if($checklog == true) {
+
+                $checklog =  DB::table('attendances')
+                 ->where('training_id' , $id)
+                 ->where('cadetno' , $cadetno)
+                 ->whereNull('attendances.time_in')
+                 ->update([
+                    'time_in' => now(),
+                    'updated_at' =>  now(),
+                 ]);
+                  return response()->json(['message' => 'Success'], 200);
+                 }
+                 else {
+                    return response()->json(['message' => $attendance], 200);
+                 }
+        }
+        else {
+
+        $checklog =  DB::table('attendances')
+                 ->where('training_id' , $id)
+                 ->where('cadetno' , $cadetno)
+                 ->whereNull('attendances.time_out')
+                 ->exists();
+
+                  if($checklog == true) {
+
+                $checklog =  DB::table('attendances')
+                 ->where('training_id' , $id)
+                 ->where('cadetno' , $cadetno)
+                 ->whereNull('attendances.time_out')
+                 ->update([
+                    'time_out' => now(),
+                    'updated_at' =>  now(),
+                 ]);
+                  return response()->json(['message' => 'Success'], 200);
+                 }
+                 else {
+                    return response()->json(['message' => $attendance], 200);
+                 }
+        }   
+       }
+    }
+
+    public function get_events_attendance() {
+
+        $search = request()->search;
+        $result = DB::table('schedules')
+        ->leftjoin('attendances' , 'attendances.training_id' , '=' , 'schedules.id')
+            ->selectRaw('schedules.* , attendances.time_in , attendances.time_out')
+            ->when($search !== "null", function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->orWhere('schedules.events', 'LIKE', "%$search%");
+                });
+            })
+            ->paginate(10);
+
+        return $result;
     }
 
 }

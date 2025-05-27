@@ -50,7 +50,7 @@
                                             "
                                         >
                                             <td
-                                                colspan="4"
+                                                colspan="6"
                                                 style="text-align: center"
                                             >
                                                 No data available.
@@ -58,7 +58,7 @@
                                         </tr>
                                         <tr v-if="loading">
                                             <td
-                                                colspan="4"
+                                                colspan="6"
                                                 style="text-align: center"
                                             >
                                                 <spinner
@@ -79,13 +79,33 @@
                                                 {{ trans.time_from }} -
                                                 {{ trans.time_to }}
                                             </td>
-                                            <td></td>
-                                            <td></td>
+                                            <td>
+                                                {{
+                                                    getTimeIn(
+                                                        trans.time_in,
+                                                        trans.date,
+                                                        trans.time_from
+                                                    )
+                                                }}
+                                            </td>
+
+                                            <td>
+                                                {{
+                                                    getTimeout(
+                                                        trans.time_out,
+                                                        trans.date,
+                                                        trans.time_to
+                                                    )
+                                                }}
+                                            </td>
                                             <td style="text-align: center">
                                                 <button
                                                     class="btn btn-sm btn-success"
                                                     data-target="#filemodal"
                                                     data-toggle="modal"
+                                                    :disabled="
+                                                        isPastDate(trans.date)
+                                                    "
                                                     @click="attend(trans.id)"
                                                 >
                                                     Time in/Time out
@@ -169,6 +189,8 @@
                                         class="magic-radio"
                                         type="radio"
                                         name="form-radio-button"
+                                        value="Time In"
+                                        v-model="attendance"
                                     />
                                     <label for="demo-form-radio-2"
                                         >Time In</label
@@ -180,6 +202,8 @@
                                         class="magic-radio"
                                         type="radio"
                                         name="form-radio-button"
+                                        value="Time Out"
+                                        v-model="attendance"
                                     />
                                     <label for="demo-form-radio-3"
                                         >Time Out</label
@@ -193,7 +217,7 @@
                                         style="float: right"
                                         data-target="#filemodal"
                                         data-toggle="modal"
-                                        @click="submitfile()"
+                                        @click="submitattendance()"
                                     >
                                         Submit
                                     </button>
@@ -225,6 +249,7 @@ import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import { debounce } from "lodash";
 import _ from "lodash";
+import { clippingParents } from "@popperjs/core";
 export default {
     data() {
         return {
@@ -238,6 +263,8 @@ export default {
                 per_page: null,
             },
             search: "",
+            id: "",
+            attendance: "",
         };
     },
     watch: {
@@ -246,17 +273,112 @@ export default {
         },
     },
     methods: {
+        isPastDate(dateStr) {
+            if (!dateStr) return false;
+            const inputDate = new Date(dateStr);
+            const today = new Date();
+            inputDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            return inputDate < today;
+        },
+        getTimeIn(timeIn, date, time) {
+            if (!timeIn) return "No Time In";
+            const timeInDate = new Date(timeIn);
+            const datetimeString = `${date}T${time}`;
+            const datetime = new Date(datetimeString);
+
+            if (timeInDate > datetime) {
+                return (
+                    this.$options.filters.formatDateTime(timeIn) +
+                    "    ( Late )"
+                );
+            }
+            return this.$options.filters.formatDateTime(timeIn);
+        },
+
+        getTimeout(timeIn, date, time) {
+            if (!timeIn) return "No Time Out";
+            const timeInDate = new Date(timeIn);
+            const datetimeString = `${date}T${time}`;
+            const datetime = new Date(datetimeString);
+            if (timeInDate < datetime) {
+                return (
+                    this.$options.filters.formatDateTime(timeIn) +
+                    "    ( Undertime )"
+                );
+            }
+            return this.$options.filters.formatDateTime(timeIn);
+        },
         getevents: _.debounce(function (page = 1) {
             this.loading = true;
             axios
-                .get(`/cadets/get_events?search=${this.search}&page=` + page)
+                .get(
+                    `/cadets/get_events_attendance?search=${this.search}&page=` +
+                        page
+                )
                 .then((res) => {
                     this.events = res.data;
                     this.loading = false;
                 });
         }, 350),
         attend(id) {
+            this.id = id;
             $("#filemodal").modal("show");
+        },
+
+        submitattendance() {
+            Swal.fire({
+                title: "Are you sure to Submit this Attendace?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, I am sure!",
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios
+                        .post(
+                            `/cadets/add_attendance?attendance=${this.attendance}&id=${this.id}`
+                        )
+                        .then((response) => {
+                            if (response.data.message == "Success") {
+                                Swal.fire({
+                                    title: "Success!",
+                                    text: "Successfully Submitted!",
+                                    icon: "success",
+                                    allowOutsideClick: false,
+                                });
+                                $("#filemodal").modal("hide");
+                                this.getevents();
+                                this.attendance = "";
+                                this.id = "";
+                            } else {
+                                Swal.fire({
+                                    title: "Warning!",
+                                    text:
+                                        "You Already" +
+                                        " " +
+                                        response.data.message +
+                                        "!",
+                                    icon: "warning",
+                                    allowOutsideClick: false,
+                                });
+                                $("#filemodal").modal("hide");
+                                this.getevents();
+                                this.attendance = "";
+                                this.id = "";
+                            }
+                        });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: "Cancelled",
+                        text: "Action has been cancelled!",
+                        icon: "info",
+                        allowOutsideClick: false,
+                    });
+                }
+            });
         },
     },
     mounted() {

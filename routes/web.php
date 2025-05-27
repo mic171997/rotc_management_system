@@ -38,9 +38,15 @@ Route::middleware('auth')->group(function () {
             Route::post('/add_absent_request', [CadetController::class, 'add_absent_request']);
             Route::get('/get_request', [CadetController::class, 'get_request']);
             Route::post('/approved_request', [CadetController::class, 'approved_request']);
+            Route::post('/add_attendance', [CadetController::class, 'add_attendance']);
+            Route::get('/get_events_attendance', [CadetController::class, 'get_events_attendance']);
     });
 
 });
+
+Route::get('/.well-known/{any}', function () {
+    return redirect('/dashboard');
+})->where('any', '.*');
 
 require __DIR__ . '/auth.php';
 

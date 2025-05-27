@@ -39,8 +39,8 @@
                                                         <br />
                                                         <date-picker
                                                             type="time"
-                                                            format="hh:mm A"
-                                                            value-type="hh:mm A"
+                                                            format="HH:mm"
+                                                            value-type="HH:mm"
                                                             v-model="time_from"
                                                             placeholder="Select Time"
                                                         />
@@ -69,8 +69,8 @@
                                                         <br />
                                                         <date-picker
                                                             type="time"
-                                                            format="hh:mm A"
-                                                            value-type="hh:mm A"
+                                                            format="HH:mm"
+                                                            value-type="HH:mm"
                                                             v-model="time_to"
                                                             placeholder="Select Time"
                                                         />
