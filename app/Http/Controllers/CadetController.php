@@ -12,9 +12,7 @@ class CadetController extends Controller
 
     public function get_cadet_counts() {
 
-      $cadet =   DB::table('users')
-        ->where('type', 'Cadet')
-        ->count();
+      $cadet =   DB::table('users')->latest('id')->value('id');
 
        $cadetno = 'CADET-0000' . ($cadet + 1);
 
