@@ -319,6 +319,7 @@ export default {
                 .then((res) => {
                     this.events = res.data;
                     this.loading = false;
+                    console.log(this.loading);
                 });
         }, 350),
         attend(id) {

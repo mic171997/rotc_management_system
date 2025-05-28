@@ -399,4 +399,41 @@ DB::table('users')
         return $count;
     }
 
+    public function get_count_attendance() {
+        $id = request()->id;
+          $count = DB::table('attendances')
+           ->join('users' , 'users.cadetno' , '=' , 'attendances.cadetno')
+          ->where('attendances.training_id' , $id)
+          ->where('users.type' , '=' , 'Cadet')
+        ->count();
+
+        return $count;
+    }
+
+    public function get_cadets_attendancelist() {
+
+
+          $search = request()->search;
+          $id = request()->id;
+
+       $result = DB::table('users')
+            ->leftJoin('attendances', function($join) use ($id) {
+                $join->on('attendances.cadetno', '=', 'users.cadetno')
+                ->where('attendances.training_id', '=', $id);
+                    
+            })
+            ->leftJoin('schedules', 'schedules.id', '=', 'attendances.training_id')
+            ->selectRaw('attendances.time_in, attendances.time_out,users.cadetno, users.name, users.company, users.lastname')
+            ->when($search !== "null", function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->orWhere('users.name', 'LIKE', "%$search%")
+                    ->orWhere('users.lastname', 'LIKE', "%$search%")
+                    ->orWhere('users.cadetno', 'LIKE', "%$search%");
+                });
+            })
+            ->where('users.type', '=', 'Cadet')
+            ->paginate(10);
+    return $result;
+    }
+
 }

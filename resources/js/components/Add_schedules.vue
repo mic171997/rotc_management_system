@@ -172,6 +172,11 @@
                                             <td style="text-align: center">
                                                 <button
                                                     class="btn btn-sm btn-info"
+                                                    data-target="#filemodal"
+                                                    data-toggle="modal"
+                                                    @click="
+                                                        showattendance(trans)
+                                                    "
                                                 >
                                                     Show Attendance
                                                 </button>
@@ -227,6 +232,222 @@
                     </div>
                 </div>
             </div>
+
+            <div
+                class="modal fade"
+                id="filemodal"
+                role="dialog"
+                aria-labelledby="myModalLabel"
+                aria-hidden="true"
+            >
+                <div
+                    class="modal-dialog modal-lg"
+                    style="width: 1000px"
+                    role="document"
+                >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5
+                                class="modal-title"
+                                id="mdlTitle"
+                                style="
+                                    padding: 5px 15px 15px 15px;
+                                    font-size: 12px;
+                                "
+                            >
+                                <i class="demo-pli-male"></i> Attendance
+                                Information
+                            </h5>
+                            <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                                @click="closemodal()"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label"
+                                            >Events</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            v-model="events_info"
+                                            disabled
+                                        />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label"
+                                            >Total Cadets:
+                                            {{ cadetcounts }}</label
+                                        >
+                                        <br />
+                                        <label class="control-label"
+                                            >Present:
+                                            {{ cadetattendance }}</label
+                                        >
+                                        <br />
+                                        <label class="control-label"
+                                            >Absent:
+                                            {{
+                                                cadetcounts - cadetattendance
+                                            }}</label
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label"
+                                            >Date</label
+                                        >
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            v-model="date_info"
+                                            disabled
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="text-align: right">
+                                <div class="form-group">
+                                    <div class="col-md-2" style="float: right">
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Search"
+                                            v-model="searchlist"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table
+                                    class="table table-bordered table-hover dt-responsive nowrap table-vcenter"
+                                    id="demo-panel-ref"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th>Cadet No.</th>
+                                            <th>Cadet</th>
+                                            <th>Company</th>
+                                            <th>Time In</th>
+                                            <th>Time Out</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-if="
+                                                !cadetattendancelist.data
+                                                    .length && !loading
+                                            "
+                                        >
+                                            <td
+                                                colspan="5"
+                                                style="text-align: center"
+                                            >
+                                                No data available.
+                                            </td>
+                                        </tr>
+                                        <tr v-if="loading">
+                                            <td
+                                                colspan="5"
+                                                style="text-align: center"
+                                            >
+                                                <spinner
+                                                    style="height: 90px"
+                                                ></spinner>
+                                                Loading please wait... :)
+                                            </td>
+                                        </tr>
+                                        <tr
+                                            v-for="(
+                                                trans, index
+                                            ) in cadetattendancelist.data"
+                                            :key="index"
+                                        >
+                                            <td>
+                                                {{ trans.cadetno }}
+                                            </td>
+                                            <td>
+                                                {{ trans.name }}
+                                                {{ trans.lastname }}
+                                            </td>
+                                            <td>{{ trans.company }}</td>
+                                            <td>
+                                                {{
+                                                    trans.time_in == null
+                                                        ? "No Time In"
+                                                        : trans.time_in
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{
+                                                    trans.time_out == null
+                                                        ? "No Time Out"
+                                                        : trans.time_out
+                                                }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <hr
+                                            style="
+                                                margin-top: 25px;
+                                                margin-bottom: 15px;
+                                            "
+                                        />
+
+                                        <div class="col-md-6">
+                                            Showing
+                                            {{ cadetattendancelist.from }} to
+                                            {{ cadetattendancelist.to }} of
+                                            {{ cadetattendancelist.total }}
+                                            entries
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="text-right">
+                                                <pagination
+                                                    style="margin: 0 0 20px 0"
+                                                    :limit="1"
+                                                    :show-disabled="false"
+                                                    :data="cadetattendancelist"
+                                                    @pagination-change-page="
+                                                        getattendancecadet()
+                                                    "
+                                                ></pagination>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                                @click="closemodal()"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -249,12 +470,26 @@ export default {
                 total: null,
                 per_page: null,
             },
+            cadetattendancelist: {
+                data: [],
+                current_page: null,
+                to: null,
+                from: null,
+                total: null,
+                per_page: null,
+            },
             id: "",
             time_from: null,
             time_to: null,
             date: null,
             event: "",
             search: "",
+            searchlist: "",
+            events_info: "",
+            date_info: "",
+            id_info: "",
+            cadetcounts: 0,
+            cadetattendance: 0,
         };
     },
     components: {
@@ -264,9 +499,41 @@ export default {
         search() {
             this.getevents();
         },
+        searchlist() {
+            this.getattendancecadet();
+        },
     },
 
     methods: {
+        getattendancecadet: _.debounce(function (page = 1) {
+            this.loading = true;
+            axios
+                .get(
+                    `/cadets/get_cadets_attendancelist?search=${this.searchlist}&id=${this.id_info}&page=` +
+                        page
+                )
+                .then((res) => {
+                    this.cadetattendancelist = res.data;
+                    this.loading = false;
+                });
+        }, 350),
+
+        showattendance(trans) {
+            axios
+                .get(`/cadets/get_count_attendance?id=${trans.id}`)
+                .then((res) => {
+                    this.cadetattendance = res.data;
+                });
+            this.events_info = trans.events;
+            this.date_info =
+                trans.date + " " + trans.time_from + "-" + trans.time_to;
+            this.id_info = trans.id;
+            this.getattendancecadet();
+            $("#filemodal").modal("show");
+        },
+        closemodal() {
+            $("#filemodal").modal("hide");
+        },
         addevents() {
             Swal.fire({
                 title: !this.id
@@ -357,6 +624,7 @@ export default {
                 .get(`/cadets/get_events?search=${this.search}&page=` + page)
                 .then((res) => {
                     this.events = res.data;
+                    this.loading = false;
                 });
         }, 350),
         updatesched(trans) {
@@ -366,9 +634,15 @@ export default {
             this.time_to = trans.time_to;
             this.id = trans.id;
         },
+        getcountcadets() {
+            axios.get(`/cadets/get_count_cadets?`).then((res) => {
+                this.cadetcounts = res.data;
+            });
+        },
     },
     mounted() {
         this.getevents();
+        this.getcountcadets();
     },
 };
 </script>
