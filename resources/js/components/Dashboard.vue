@@ -83,55 +83,118 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <br />
+                            <br />
                             <div class="panel">
                                 <!--Panel heading-->
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">With table</h3>
+                                    <h3
+                                        class="text-main text-normal text-2x mar-no"
+                                    >
+                                        Upcoming Schedules!
+                                    </h3>
                                 </div>
-
-                                <!--Default panel contents-->
-                                <div class="panel-body">
-                                    <p>
-                                        Some default panel content here. Nulla
-                                        vitae elit libero, a pharetra augue.
-                                        Aenean lacinia bibendum nulla sed
-                                        consectetur.
-                                    </p>
+                                <div class="row" style="text-align: right">
+                                    <div class="form-group">
+                                        <div
+                                            class="col-md-2"
+                                            style="float: right"
+                                        >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Search"
+                                                v-model="search"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="table-responsive">
+                                    <table
+                                        class="table table-bordered table-hover dt-responsive nowrap table-vcenter"
+                                        id="demo-panel-ref"
+                                    >
+                                        <thead>
+                                            <tr>
+                                                <th>Events</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                v-if="
+                                                    !upcomingevents.data
+                                                        .length && !loading
+                                                "
+                                            >
+                                                <td
+                                                    colspan="3"
+                                                    style="text-align: center"
+                                                >
+                                                    No data available.
+                                                </td>
+                                            </tr>
+                                            <tr v-if="loading">
+                                                <td
+                                                    colspan="3"
+                                                    style="text-align: center"
+                                                >
+                                                    <spinner
+                                                        style="height: 90px"
+                                                    ></spinner>
+                                                    Loading please wait... :)
+                                                </td>
+                                            </tr>
+                                            <tr
+                                                v-for="(
+                                                    trans, index
+                                                ) in upcomingevents.data"
+                                                :key="index"
+                                            >
+                                                <td>{{ trans.events }}</td>
+                                                <td>{{ trans.date }}</td>
+                                                <td>
+                                                    {{ trans.time_from }} -
+                                                    {{ trans.time_to }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <hr
+                                                style="
+                                                    margin-top: 25px;
+                                                    margin-bottom: 15px;
+                                                "
+                                            />
 
-                                <!--Table-->
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-center">1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                            <div class="col-md-6">
+                                                Showing
+                                                {{ upcomingevents.from }} to
+                                                {{ upcomingevents.to }} of
+                                                {{ upcomingevents.total }}
+                                                entries
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-right">
+                                                    <pagination
+                                                        style="
+                                                            margin: 0 0 20px 0;
+                                                        "
+                                                        :limit="1"
+                                                        :show-disabled="false"
+                                                        :data="upcomingevents"
+                                                        @pagination-change-page="
+                                                            getupcomingevents()
+                                                        "
+                                                    ></pagination>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -142,10 +205,20 @@
 </template>
 
 <script>
+import { debounce } from "lodash";
+import _ from "lodash";
 export default {
     data() {
         return {
             data: {
+                data: [],
+                current_page: null,
+                to: null,
+                from: null,
+                total: null,
+                per_page: null,
+            },
+            upcomingevents: {
                 data: [],
                 current_page: null,
                 to: null,
@@ -158,9 +231,15 @@ export default {
             cadets: 0,
             schedules: 0,
             request: 0,
+            loading: false,
+            search: "",
         };
     },
-    components: {},
+    watch: {
+        search() {
+            this.getupcomingevents();
+        },
+    },
     methods: {
         getcountcadets() {
             axios.get(`/cadets/get_count_cadets?`).then((res) => {
@@ -177,6 +256,16 @@ export default {
                 this.request = res.data;
             });
         },
+
+        getupcomingevents: _.debounce(function (page = 1) {
+            this.loading = true;
+            axios
+                .get(`/cadets/get_upcomingevents?search=${this.search}`)
+                .then((res) => {
+                    this.upcomingevents = res.data;
+                    this.loading = false;
+                });
+        }, 350),
     },
     mounted() {
         this.$root.currentPage = this.$route.meta.name;
@@ -184,6 +273,7 @@ export default {
         this.getcountcadets();
         this.getcountschedules();
         this.getcountrequest();
+        this.getupcomingevents();
         console.log(this.user);
     },
 };

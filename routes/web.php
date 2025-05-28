@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/get_count_request', [CadetController::class, 'get_count_request']);
             Route::get('/get_count_attendance', [CadetController::class, 'get_count_attendance']);
             Route::get('/get_cadets_attendancelist', [CadetController::class, 'get_cadets_attendancelist']);
+            Route::get('/get_upcomingevents', [CadetController::class, 'get_upcomingevents']);
     });
 
 });

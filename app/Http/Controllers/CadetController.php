@@ -436,4 +436,21 @@ DB::table('users')
     return $result;
     }
 
+    public function get_upcomingevents() {
+
+         $search = request()->search;
+
+        $result = DB::table('schedules')
+            ->selectRaw('schedules.*')
+            ->when($search !== "null" || $search !== null, function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->orWhere('schedules.events', 'LIKE', "%$search%");
+                });
+            })
+            ->where('date' , '>=' , now()->format('Y-m-d'))
+            ->paginate(10);
+
+        return $result;
+    }
+
 }
