@@ -63,7 +63,7 @@
 
   <body>
     <div id="app">
-      <div id="container" class="effect aside-float aside-bright mainnav-sm">
+      <div id="container" class="effect aside-bright aside-fixed mainnav-fixed mainnav-lg print-content">
 
         <!--NAVBAR-->
         <!--===================================================-->
@@ -126,8 +126,8 @@
                 <!--User dropdown-->
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <li>
-                        <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                      document.getElementById('logout-form').submit();">
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); 
+                      document.getElementById('logout-form').submit();" style="text-decoration: none; " >
                           {{ __('Logout') }}</a>
 
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -201,14 +201,14 @@
           <!--MAIN NAVIGATION-->
           <!--===================================================-->
           <nav id="mainnav-container">
-            <div id="mainnav">
+            <div id="mainnav" style="height: 100%; min-height: auto;">
 
               <!--OPTIONAL : ADD YOUR LOGO TO THE NAVIGATION-->
 
               <!--Menu-->
               <!--================================-->
-              <div id="mainnav-menu-wrap">
-                <div class="nano">
+              <div id="mainnav-menu-wrap" class="mainnav-fixed">
+                <div class="nano has-scrollba">
                   <div class="nano-content">
 
                     <!--Profile Widget-->
@@ -242,44 +242,44 @@
                     <ul id="mainnav-menu" class="list-group">
                         <br>
                       <!--Category name-->
-                      <li class="list-header">Navigation</li>
+                      <li class="list-header"> <span style="font-size: 15px; text-align:center;">Navigation</span></li>
 
-                        <router-link tag="li" class="nav-item" to="dashboard"><a href="#">
+                        <router-link tag="li" class="nav-item" to="dashboard"><a href="#" style="text-decoration: none;">
                           <i class="fa fa-home"></i>
-                          <span class="menu-title">Dashboard</span>
+                          <span class="menu-title" style="font-size: 14px; text-align:center;">Dashboard</span>
                         </a></router-link>
 
                          @if(Auth::user()->type == 'Admin')
 
-                        <router-link tag="li" class="nav-item" to="cadets"><a href="#">
+                        <router-link tag="li" class="nav-item" to="cadets"><a href="#" style="text-decoration: none;">
                           <i class="fa fa-group"></i>
-                          <span class="menu-title">Add Cadet</span>
+                          <span class="menu-title" style="font-size: 14px; text-align:center;">Add Cadet</span>
                         </a></router-link>
 
 
-                        <router-link tag="li" class="nav-item" to="schedules"><a href="#">
+                        <router-link tag="li" class="nav-item" to="schedules"><a href="#" style="text-decoration: none;">
                           <i class="fa fa-bars"></i>
-                          <span class="menu-title">Schedules</span>
+                          <span class="menu-title" style="font-size: 14px; text-align:center;">Schedules</span>
                         </a></router-link>
 
 
-                        <router-link tag="li" class="nav-item" to="absents_request"><a href="#">
+                        <router-link tag="li" class="nav-item" to="absents_request"><a href="#" style="text-decoration: none;">
                           <i class="fa fa-envelope-o"></i>
-                          <span class="menu-title">Absent Request</span>
+                          <span class="menu-title" style="font-size: 14px; text-align:center;" >Absent Request</span>
                         </a></router-link>
 
                          @endif
 
                           @if(Auth::user()->type == 'Cadet')
 
-                        <router-link tag="li" class="nav-item" to="file_absents"><a href="#">
+                        <router-link tag="li" class="nav-item" to="file_absents"><a href="#" style="text-decoration: none;">
                           <i class="fa fa-pencil-square-o"></i>
-                          <span class="menu-title">File Absent</span>
+                          <span class="menu-title"  style="font-size: 14px; text-align:center;">File Absent</span>
                         </a></router-link>
                           
-                         <router-link tag="li" class="nav-item" to="attendance"><a href="#">
+                         <router-link tag="li" class="nav-item" to="attendance"><a href="#" style="text-decoration: none;">
                           <i class="fa fa-id-badge"></i>
-                          <span class="menu-title">Attendance</span>
+                          <span class="menu-title"  style="font-size: 14px; text-align:center;">Attendance</span>
                         </a></router-link>
 
                          @endif
